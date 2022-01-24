@@ -27,7 +27,7 @@ def getDataFromID(chem_data):
   # final_data ["SMILE Structure"] = cs.get_details(chem_data.record_id)['smiles']
   final_data ["SMILE Structure"] = chem_data.smiles
   final_data ["Image URL"] = chem_data.image_url
-  return json.dumps(final_data)
+  return final_data
  
 def findDesiredCompound(chem_data):
     for i in range(1, len(chem_data)+1):
@@ -56,19 +56,21 @@ ch = int(input("Enter your choice here  : "))
 
 if (ch==1):
   ChemSpiID = int(input("Enter the Chem Spider ID of the compound you are looking for :  "))
-  chem_data = fromChemSpiderID(ChemSpiID)
-  output = getDataFromID(chem_data)
+  comp_obj = fromChemSpiderID(ChemSpiID)
+  output = getDataFromID(comp_obj)
 elif (ch==2):
   name = input("Enter the name of the chemical compund here :  ")
-  chem_data = fromNameOfChemical(name)
-  chem_data = list(chem_data)
+  comp_obj = fromNameOfChemical(name)
+  comp_obj = list(comp_obj)
   # tester(chem_data)
-  l = len(chem_data)
+  l = len(comp_obj)
   if (l == 1):
-    comp_obj = chem_data[0]
+    comp_obj = comp_obj[0]
   else:
-    comp_obj = findDesiredCompound(chem_data)
+    comp_obj = findDesiredCompound(comp_obj)
 
   output = getDataFromID(comp_obj)
 
-print (output)
+print("\nShowing the output:\n")
+for i in output:
+    print(i, ":", output[i])
