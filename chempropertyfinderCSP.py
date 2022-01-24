@@ -22,42 +22,29 @@ def getDataFromID(chem_data):
   final_data ["IUPAC Name "] = None
   final_data ["Molecular Formula "] = chem_data.molecular_formula
   final_data ["Molecular Weight "] = chem_data.molecular_weight
-  final_data ["Chem Spider ID "] = ChemSpiID
+  final_data ["Chem Spider ID "] = chem_data.record_id
   #final_data["Image"] = chem_data.image
-  final_data ["SMILE Structure"] = cs.get_details(ChemSpiID)['smiles']
+  # final_data ["SMILE Structure"] = cs.get_details(chem_data.record_id)['smiles']
+  final_data ["SMILE Structure"] = chem_data.smiles
   final_data ["Image URL"] = chem_data.image_url
-  return json.dumps(final_data)
+  return final_data
  
 def findDesiredCompound(chem_data):
-  output={}
-  c=0
-  for i in chem_data:
-    output[c]=i.common_name
-    c+=1
-  output['no_of_results'] = c
-  print("Found ",output["no_of_results"]," matches :")
-  for j in range (0,output["no_of_results"],1):
-    print (j," : ",output[j])
-  print("Please select your choice by typing the no corresponding to the compound name")
-  #ch=int(input("Here  : "))
-  return output#[ch]
+    for i in range(1, len(chem_data)+1):
+        print(i, ":", chem_data[i-1].common_name)
+    x = int(input("Enter the index of compund: "))
+    return chem_data[x-1]
 
-def nametoID(name):                                                   #COMPLETE THIS TO COMPLETE THE CODE
-  # #It takes a name and returns its ChemSpiID
-  # lst=list(cs.search(name))
-  # common_names=[]
-  # i=0
-  # for item in lst:
+# def nametoID(compound_object):                                                   #COMPLETE THIS TO COMPLETE THE CODE
+#   return compound_object.record_id
 
-  return name.
-
-def tester(data):
-  dic = findDesiredCompound(data)
-  keys = dic.values()
-  for i in keys:
-    result = list(cs.search(i))
-    print(i," : ",len(result))
-  return None
+# def tester(data):
+#   dic = findDesiredCompound(data)
+#   keys = dic.values()
+#   for i in keys:
+#     result = list(cs.search(i))
+#     print(i," : ",len(result))
+#   return None
 
 
 
@@ -69,20 +56,21 @@ ch = int(input("Enter your choice here  : "))
 
 if (ch==1):
   ChemSpiID = int(input("Enter the Chem Spider ID of the compound you are looking for :  "))
-  chem_data = fromChemSpiderID(ChemSpiID)
-  output = getDataFromID(chem_data)
+  comp_obj = fromChemSpiderID(ChemSpiID)
+  output = getDataFromID(comp_obj)
 elif (ch==2):
   name = input("Enter the name of the chemical compund here :  ")
-  chem_data = fromNameOfChemical(name)
-  chem_data = list(chem_data)
-  tester(chem_data)
-#   l = len(chem_data)
-#   if (l == 1):
-#     CSid = nametoId(chem_data.common_name)
-#   else:
-#     search = findDesiredCompound(chem_data)
-#     CSid = nametoID(search)
+  comp_obj = fromNameOfChemical(name)
+  comp_obj = list(comp_obj)
+  # tester(chem_data)
+  l = len(comp_obj)
+  if (l == 1):
+    comp_obj = comp_obj[0]
+  else:
+    comp_obj = findDesiredCompound(comp_obj)
 
-#   output = getDataFromID(CSid)
+  output = getDataFromID(comp_obj)
 
-# print (output)
+print("\nShowing the output:\n")
+for i in output:
+    print(i, ":", output[i])
